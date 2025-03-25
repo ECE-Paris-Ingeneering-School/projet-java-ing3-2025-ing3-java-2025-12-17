@@ -25,7 +25,9 @@ CREATE TABLE reservation(
                             IdReservation INT,
                             DateReservation DATETIME,
                             NombreBillets INT,
-                            PrixUnBillet VARCHAR(50),
+                            #A discuter
+                            PrixUnBillet DOUBLE,
+
                             IdClient INT NOT NULL,
                             IdAttraction VARCHAR(50) NOT NULL,
                             PRIMARY KEY(IdReservation),

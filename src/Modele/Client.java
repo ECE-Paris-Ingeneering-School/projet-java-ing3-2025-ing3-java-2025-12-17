@@ -5,13 +5,15 @@ public class Client {
         private String clientNom;
         private int clientAge;
         private String typeClient;
+        private String clientMotDePasse;
 
         // constructeur
-        public Client (int clientId, String clientNom, int clientAge, String typeClient) {
+        public Client (int clientId, String clientNom,String clientMotDePasse, int clientAge, String typeClient) {
                 this.clientId = clientId;
                 this.clientNom = clientNom;
                 this.clientAge = clientAge;
                 this.typeClient = typeClient;
+                this.clientMotDePasse = clientMotDePasse;
 
         }
 
@@ -20,5 +22,6 @@ public class Client {
         public String getclientNom() { return clientNom; }
         public int getclientAge() { return clientAge; }
         public String gettypeClient() { return typeClient; }
+        public String getclientMotDePasse() { return clientMotDePasse; }
 
 }
