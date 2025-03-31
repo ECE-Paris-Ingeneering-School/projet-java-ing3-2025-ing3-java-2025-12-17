@@ -16,7 +16,9 @@ public class Main {
             DaoFactory dao = DaoFactory.getInstance("projet_java", "root", "");
             ClientDAOImpl clidao = new ClientDAOImpl(dao);
 
-        } catch (ClassNotFoundException e) {
+        }
+
+        catch (ClassNotFoundException e) {
             System.err.println("MySQL JDBC Driver not found.");
             e.printStackTrace();
         }
