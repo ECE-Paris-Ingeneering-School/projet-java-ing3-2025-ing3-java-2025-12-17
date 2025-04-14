@@ -2,6 +2,10 @@ package DAO;
 
 // import des packages
 import Modele.Attraction;
+
+import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -11,6 +15,7 @@ public class AttractionDAOImpl implements AttractionDAO {
     public AttractionDAOImpl(DaoFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
+
     @Override
     public Attraction getAttraction(int attractionId) {
         Attraction attraction = null;
@@ -23,10 +28,24 @@ public class AttractionDAOImpl implements AttractionDAO {
             ResultSet resultats = preparedStatement.executeQuery();
 
             if (resultats.next()) {
-                String attractionNom = resultats.getString(2);
-                float[] attractionPrix = {resultats.getFloat(3), resultats.getFloat(4), resultats.getFloat(5)};
+                String attractionType = resultats.getString(2);
+                String attractionNom = resultats.getString(3);
+                String attractionImage = resultats.getString(4);
+                float attractionPrixComplet = resultats.getFloat(5);
+                float attractionPrixHab = resultats.getFloat(6);
+                float attractionPrixJeunes = resultats.getFloat(7);
+                float attractionPrixSenior= resultats.getFloat(8);
+                String attractionDescription = resultats.getString(9);
+                String attractionPrixCompletStr = Float.toString(attractionPrixComplet);
+                String attractionPrixHabStr = Float.toString(attractionPrixHab);
+                String attractionPrixJeunesStr = Float.toString(attractionPrixJeunes);
+                String attractionPrixSeniorStr = Float.toString(attractionPrixSenior);
+                URL imageURL = getClass().getClassLoader().getResource(attractionImage);
+                ImageIcon icon = new ImageIcon(imageURL);
+                Image originalImage = icon.getImage();
+                Image scaledImage = new ImageIcon(originalImage.getScaledInstance( 200, 200, Image.SCALE_SMOOTH)).getImage();
 
-                attraction = new Attraction(attractionId, attractionNom, attractionPrix);
+                attraction = new Attraction(attractionType, attractionNom, scaledImage, attractionPrixCompletStr, attractionPrixHabStr,attractionPrixJeunesStr,attractionPrixSeniorStr,attractionDescription);
             }
         }
         catch (SQLException e) {
@@ -48,11 +67,23 @@ public class AttractionDAOImpl implements AttractionDAO {
             ResultSet resultats = statement.executeQuery("select * from attraction");
 
             while (resultats.next()) {
-                int attractionId = resultats.getInt(1);
-                String attractionNom = resultats.getString(2);
-                float[] attractionPrix = {resultats.getFloat(3), resultats.getFloat(4), resultats.getFloat(5)};
-
-                Attraction attraction = new Attraction(attractionId, attractionNom, attractionPrix);
+                String attractionType = resultats.getString(2);
+                String attractionNom = resultats.getString(3);
+                String attractionImage = resultats.getString(4);
+                float attractionPrixComplet = resultats.getFloat(5);
+                float attractionPrixHab = resultats.getFloat(6);
+                float attractionPrixJeunes = resultats.getFloat(7);
+                float attractionPrixSenior= resultats.getFloat(8);
+                String attractionDescription = resultats.getString(9);
+                String attractionPrixCompletStr = Float.toString(attractionPrixComplet);
+                String attractionPrixHabStr = Float.toString(attractionPrixHab);
+                String attractionPrixJeunesStr = Float.toString(attractionPrixJeunes);
+                String attractionPrixSeniorStr = Float.toString(attractionPrixSenior);
+                URL imageURL = getClass().getClassLoader().getResource(attractionImage);
+                    ImageIcon icon = new ImageIcon(imageURL);
+                    Image originalImage = icon.getImage();
+                    Image scaledImage = new ImageIcon(originalImage.getScaledInstance( 1536/7, 1024/7, Image.SCALE_SMOOTH)).getImage();
+                Attraction attraction = new Attraction(attractionType, attractionNom,scaledImage, attractionPrixCompletStr, attractionPrixHabStr, attractionPrixJeunesStr, attractionPrixSeniorStr,attractionDescription);
 
                 listeAttractions.add(attraction);
             }
@@ -71,9 +102,6 @@ public class AttractionDAOImpl implements AttractionDAO {
             Connection connection = daoFactory.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO attraction (NomAttraction, PrixEnfant, PrixAdulte, PrixSenior) VALUES (?, ?, ?, ?)");
             preparedStatement.setString(1, attraction.getAttractionNom());
-            preparedStatement.setFloat(2, attraction.getAttractionPrix()[0]);
-            preparedStatement.setFloat(3, attraction.getAttractionPrix()[1]);
-            preparedStatement.setFloat(4, attraction.getAttractionPrix()[2]);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -87,10 +115,7 @@ public class AttractionDAOImpl implements AttractionDAO {
             Connection connexion = daoFactory.getConnection();
             PreparedStatement preparedStatement = connexion.prepareStatement("update attraction set NomAttraction = ?, PrixEnfant = ?, PrixAdulte = ?, PrixSenior = ? where IdAttraction = ?");
             preparedStatement.setString(1, attraction.getAttractionNom());
-            preparedStatement.setFloat(2, attraction.getAttractionPrix()[0]);
-            preparedStatement.setFloat(3, attraction.getAttractionPrix()[1]);
-            preparedStatement.setFloat(4, attraction.getAttractionPrix()[2]);
-            preparedStatement.setInt(5, attraction.getAttractionId());
+            //preparedStatement.setInt(5, attraction.getAttractionId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -110,7 +135,4 @@ public class AttractionDAOImpl implements AttractionDAO {
             System.out.println("Suppression de l'attraction impossible");
         }
     }
-
-
-
 }
