@@ -174,7 +174,7 @@ public class ParcAttractionView extends JPanel {
                         int selectedDay = (Integer) dayValue;
                         LocalDate selectedDate = LocalDate.of(currentDate.getYear(), currentDate.getMonth(), selectedDay);
                         Color selectedColor = dayColors[row][col]; // Récupérer la couleur du jour cliqué
-                        Reservation res = new Reservation(mainFrame, dao, attractionChoisie,selectedColor,selectedDate);
+                        ReservationView res = new ReservationView(mainFrame, dao, attractionChoisie,selectedColor,selectedDate);
                         mainFrame.setPanel(res, "Reservtion" + attractionChoisie);
                     }
                     // Forcer le rafraîchissement de la table

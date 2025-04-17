@@ -19,8 +19,8 @@ public class CompteView extends JPanel {
             connexionView(mainFrame,dao,client);
         }
         else {
-            ProfileView profileView = new ProfileView(mainFrame, dao);
-            mainFrame.setPanel(profileView, "Profil");
+            ProfileView res = new ProfileView(mainFrame, dao);
+            mainFrame.setPanel(res, "profile");
         }
     }
     public void connexionView(MainFrame mainFrame, DaoFactory dao,Client client){
@@ -52,6 +52,7 @@ public class CompteView extends JPanel {
         JLabel mdpLabel = new JLabel("Mot de passe :");
         mdpLabel.setForeground(Color.WHITE);
         mdpLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        mdpLabel.setMaximumSize(new Dimension(200, 50));
         JPasswordField mdpPassField = new JPasswordField(20);
         mdpPassField.setMaximumSize(new Dimension(200, 50));
         mdpPassField.setForeground(greenColor);
@@ -90,8 +91,8 @@ public class CompteView extends JPanel {
                 if(clientTampon!=null){
                     messageLabel.setText("");
                     mainFrame.setClientConnecte(clientTampon);
-                    mainFrame.initHeader(dao);
-                    mainFrame.setPanel(new AccueilVue(mainFrame, dao), "accueil");
+                    mainFrame.updateHeader(dao);
+                    mainFrame.setPanel(new ProfileView(mainFrame,dao), "Profil");
                 }
                 else{
                     messageLabel.setText("Mauvaise connexion, veuillez rééessayer");

@@ -28,6 +28,7 @@ public class AttractionDAOImpl implements AttractionDAO {
             ResultSet resultats = preparedStatement.executeQuery();
 
             if (resultats.next()) {
+                int clientId = resultats.getInt(1);
                 String attractionType = resultats.getString(2);
                 String attractionNom = resultats.getString(3);
                 String attractionImage = resultats.getString(4);
@@ -45,7 +46,7 @@ public class AttractionDAOImpl implements AttractionDAO {
                 Image originalImage = icon.getImage();
                 Image scaledImage = new ImageIcon(originalImage.getScaledInstance( 200, 200, Image.SCALE_SMOOTH)).getImage();
 
-                attraction = new Attraction(attractionType, attractionNom, scaledImage, attractionPrixCompletStr, attractionPrixHabStr,attractionPrixJeunesStr,attractionPrixSeniorStr,attractionDescription);
+                attraction = new Attraction(clientId, attractionType, attractionNom, scaledImage, attractionPrixCompletStr, attractionPrixHabStr,attractionPrixJeunesStr,attractionPrixSeniorStr,attractionDescription);
             }
         }
         catch (SQLException e) {
@@ -67,6 +68,7 @@ public class AttractionDAOImpl implements AttractionDAO {
             ResultSet resultats = statement.executeQuery("select * from attraction");
 
             while (resultats.next()) {
+                int attractionId = resultats.getInt(1);
                 String attractionType = resultats.getString(2);
                 String attractionNom = resultats.getString(3);
                 String attractionImage = resultats.getString(4);
@@ -83,7 +85,7 @@ public class AttractionDAOImpl implements AttractionDAO {
                     ImageIcon icon = new ImageIcon(imageURL);
                     Image originalImage = icon.getImage();
                     Image scaledImage = new ImageIcon(originalImage.getScaledInstance( 1536/7, 1024/7, Image.SCALE_SMOOTH)).getImage();
-                Attraction attraction = new Attraction(attractionType, attractionNom,scaledImage, attractionPrixCompletStr, attractionPrixHabStr, attractionPrixJeunesStr, attractionPrixSeniorStr,attractionDescription);
+                Attraction attraction = new Attraction(attractionId, attractionType, attractionNom,scaledImage, attractionPrixCompletStr, attractionPrixHabStr, attractionPrixJeunesStr, attractionPrixSeniorStr,attractionDescription);
 
                 listeAttractions.add(attraction);
             }

@@ -37,7 +37,7 @@ public class HeaderView extends JPanel{
             btn.setLocation(getWidth()/2,50);
             setPreferredSize(new Dimension(getWidth(), 100));
             btn.addActionListener(e -> {
-                handleNavigation(dao, item);
+                handleNavigation(mainFrame, dao, item);
             });
             navPanel.add(btn);
         }
@@ -82,8 +82,10 @@ public class HeaderView extends JPanel{
     }
 
 
-    private void handleNavigation(DaoFactory dao, String item) {
-        MainFrame mainFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
+
+
+    private void handleNavigation(MainFrame mainFrame, DaoFactory dao, String item) {
+        Client client = mainFrame.getClientConnecte();
         mainFrame.setPanel(new AccueilVue(mainFrame, dao), "parc");
         switch (item) {
             case "Accueil":
@@ -93,7 +95,12 @@ public class HeaderView extends JPanel{
                 mainFrame.setPanel(new ChoixAttraction(mainFrame, dao), "choix");
                 break;
             case "Mon Compte":
-                mainFrame.setPanel(new CompteView(mainFrame, dao), "compte");
+                if (client==null) {
+                    mainFrame.setPanel(new CompteView(mainFrame, dao), "compte");
+                }
+                else{
+                    mainFrame.setPanel(new ProfileView(mainFrame,dao), "Profil");
+                }
                 break;
         }
     }

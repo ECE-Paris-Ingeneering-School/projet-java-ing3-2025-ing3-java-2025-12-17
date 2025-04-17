@@ -18,6 +18,7 @@ public class MainFrame extends JFrame {
     public MainFrame(DaoFactory dao, Client client) {
         this.clientTampon = client;
         this.clientConnecte = client;
+        updateHeader(dao);
         setTitle("Ton Appli");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH); // plein écran
@@ -38,6 +39,8 @@ public class MainFrame extends JFrame {
 
         setVisible(true);
     }
+
+
 
     public void showPanel(String name) {
         CardLayout cl = (CardLayout) cardPanel.getLayout();
@@ -63,6 +66,17 @@ public class MainFrame extends JFrame {
         revalidate();
         repaint();
     }
+
+    public void updateHeader(DaoFactory dao) {
+        if (headerView != null) {
+            remove(headerView);
+        }
+        headerView = new HeaderView(this, dao, clientConnecte);
+        add(headerView, BorderLayout.NORTH);
+        revalidate();
+        repaint();
+    }
+
 
     public Client getClientConnecte() {
         return clientConnecte;

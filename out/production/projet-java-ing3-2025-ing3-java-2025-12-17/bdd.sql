@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 11, 2025 at 06:22 PM
+-- Generation Time: Apr 16, 2025 at 01:53 PM
 -- Server version: 5.7.24
 -- PHP Version: 8.0.1
 
@@ -69,7 +69,10 @@ CREATE TABLE `client` (
 
 INSERT INTO `client` (`IdClient`, `NomUtilisateur`, `MotDePasse`, `Age`, `Tarif`) VALUES
     (1, 'Arthur', '1', 20, 'jeune'),
-    (2, 'Eliott', '12', 90, 'senior');
+    (2, 'Eliott', '12', 90, 'senior'),
+    (3, 'theo', '123', 40, 'reduit'),
+    (4, 'gabriel', '1234', 35, 'complet'),
+    (5, 'Paupau', '1808', 21, 'jeune');
 
 -- --------------------------------------------------------
 

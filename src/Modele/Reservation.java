@@ -1,24 +1,23 @@
 package Modele;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 public class Reservation {
     private int reservationId;
     private Date reservationDate;
     private int reservationNbPersonnes;
     private double reservationPrix;
-    private String idAttraction;
+    private int idAttraction;
     private int clientId;
 
     // constructeur
-    public Reservation(int reservationId, Date reservationDate, int reservationNbPersonnes, int clientId, double reservationPrix, String idAttraction) {
-        this.reservationId = reservationId;
+    public Reservation(Date reservationDate, int reservationNbPersonnes, int clientId, double reservationPrix, int idAttraction) {
         this.reservationDate = reservationDate;
         this.reservationNbPersonnes = reservationNbPersonnes;
         this.clientId = clientId;
         this.reservationPrix = reservationPrix;
         this.idAttraction = idAttraction;
-
     }
 
     // getters
@@ -34,13 +33,9 @@ public class Reservation {
         return reservationPrix;
     }
 
-    public String getIdAttraction() {
+    public int getIdAttraction() {
         return idAttraction;
     }
-
-
-
-
 
     public int getReservationNbPersonnes() {
         return reservationNbPersonnes;

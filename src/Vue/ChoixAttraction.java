@@ -89,8 +89,7 @@ public class ChoixAttraction extends JPanel {
                             mainFrame.setPanel(pav, "attraction_" + selected);
                         }
                         else if(client == null) {
-                            Reservation res=new Reservation(mainFrame,dao,selected,null,null);
-                            mainFrame.setPanel(res, "attraction_" + selected);
+                            CompteView compteView=new CompteView(mainFrame,dao);
                         }
                     }
                 }

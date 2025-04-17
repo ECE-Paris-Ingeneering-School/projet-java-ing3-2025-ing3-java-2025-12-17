@@ -5,6 +5,7 @@ import Controleur.MainFrame;
 import DAO.DaoFactory;
 import Modele.Attraction;
 import Modele.Client;
+import Controleur.NouveauRDV;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -13,9 +14,8 @@ import java.awt.event.*;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
-public class Reservation extends JPanel {
+public class ReservationView extends JPanel {
     private JTabbedPane tabbedPane;
     private JButton[] buttons;
     private DefaultTableModel calendarModel;
@@ -29,10 +29,10 @@ public class Reservation extends JPanel {
     private LocalDate currentDate;
     private static Color[][] dayColors; // Tableau pour stocker la couleur de chaque jour
     private static Map<Point, Color> hoveredCells = new HashMap<>(); // Map pour garder une trace des cellules survolées
-    private int prix=0;
+    private int total=0;
 
 
-    public Reservation(MainFrame mainFrame, DaoFactory dao, Attraction attractionChoisie, Color couleurChoisie, LocalDate dateChoisie) {
+    public ReservationView(MainFrame mainFrame, DaoFactory dao, Attraction attractionChoisie, Color couleurChoisie, LocalDate dateChoisie) {
         Client client = mainFrame.getClientConnecte();
         setLayout(new BorderLayout());
 
@@ -161,13 +161,22 @@ public class Reservation extends JPanel {
         questionLabel.setFont(new Font("Arial", Font.PLAIN, 20));
         questionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JSpinner spinner = new JSpinner(new SpinnerNumberModel(1, 1, 50, 1));
+        JSpinner spinner = new JSpinner(new SpinnerNumberModel(0, 0, 50, 1));
         JPanel spinnerPanel = new JPanel();
         spinnerPanel.setBackground(greenColor);
         spinnerPanel.add(spinner);
 
-
         CalculPrixBillet calculPrixBillet = new CalculPrixBillet();
+
+        JLabel calculLabel =new JLabel("Vous avez le tarif "+ client.gettypeClient()+", prix totale : 0€");
+        calculLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        calculLabel.setForeground(Color.WHITE);
+        calculLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+        spinner.addChangeListener(e -> {
+             int total = ((int) spinner.getValue() * calculPrixBillet.calculPrixDuBillet(client, attractionChoisie));
+            calculLabel.setText("Vous avez le tarif " + client.gettypeClient() + ", prix total : " + total + "€");
+        });
+
 
 
         JButton bouton = new JButton("Comfirmer ma resérvation");
@@ -179,14 +188,9 @@ public class Reservation extends JPanel {
         bouton.setLocation(getWidth()/2,getHeight()-200);
         bouton.setPreferredSize(new Dimension(300, 100));
 
-        JLabel calculLabel =new JLabel("Vous avez le tarif "+ client.gettypeClient()+", prix totale : " + prix);
-        calculLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        calculLabel.setForeground(Color.WHITE);
-        calculLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-
         bouton.addActionListener(e -> {
-            prix = (int) spinner.getValue() * calculPrixBillet.calculPrixDuBillet(client, attractionChoisie);
-            calculLabel.setText("Vous avez le tarif "+ client.gettypeClient()+", prix totales : " + prix);
+            int total = ((int) spinner.getValue() * calculPrixBillet.calculPrixDuBillet(client, attractionChoisie));
+            new NouveauRDV(dao,client,dateChoisie,attractionChoisie,(int) spinner.getValue(),calculPrixBillet.calculPrixDuBillet(client, attractionChoisie));
             ProfileView profileView = new ProfileView(mainFrame, dao);
             mainFrame.setPanel(profileView, "Profil");
         });

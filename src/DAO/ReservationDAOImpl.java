@@ -15,13 +15,12 @@ public class ReservationDAOImpl implements ReservationDAO {
     public void ajouterReservation(Reservation reservation) {
         try {
             Connection connexion = daoFactory.getConnection();
-            PreparedStatement preparedStatement = connexion.prepareStatement("insert into reservation (IdReservation, DateReservation, NombreBillets, PrixUnBillet, IdClient, IdAttraction) values(?,?,?,?,?,?)");
-            preparedStatement.setInt(1, reservation.getReservationId());
-            preparedStatement.setDate(2, reservation.getReservationDate());
-            preparedStatement.setInt(3, reservation.getReservationNbPersonnes());
-            preparedStatement.setDouble(4, reservation.getReservationPrix());
-            preparedStatement.setInt(5, reservation.getClientId());
-            preparedStatement.setString(6, reservation.getIdAttraction());
+            PreparedStatement preparedStatement = connexion.prepareStatement("insert into reservation (DateReservation, NombreBillets, PrixUnBillet, IdClient, IdAttraction) values(?,?,?,?,?)");
+            preparedStatement.setDate(1, reservation.getReservationDate());
+            preparedStatement.setInt(2, reservation.getReservationNbPersonnes());
+            preparedStatement.setDouble(3, reservation.getReservationPrix());
+            preparedStatement.setInt(4, reservation.getClientId());
+            preparedStatement.setInt(5, reservation.getIdAttraction());
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -52,7 +51,7 @@ public class ReservationDAOImpl implements ReservationDAO {
             preparedStatement.setDate(2, reservation.getReservationDate());
             preparedStatement.setInt(3, reservation.getReservationNbPersonnes());
             preparedStatement.setDouble(4, reservation.getReservationPrix());
-            preparedStatement.setString(5, reservation.getIdAttraction());
+            preparedStatement.setInt(5, reservation.getIdAttraction());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -69,7 +68,7 @@ public class ReservationDAOImpl implements ReservationDAO {
             preparedStatement.setInt(1, reservationId);
             ResultSet resultats = preparedStatement.executeQuery();
             if (resultats.next()) {
-                reservation = new Reservation(resultats.getInt(1), resultats.getDate(2), resultats.getInt(3), resultats.getInt(4), resultats.getDouble(5), resultats.getString(6));
+                reservation = new Reservation(resultats.getDate(2), resultats.getInt(3), resultats.getInt(4), resultats.getDouble(5), resultats.getInt(6));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -86,7 +85,7 @@ public class ReservationDAOImpl implements ReservationDAO {
             Statement statement = connexion.createStatement();
             ResultSet resultats = statement.executeQuery("select * from reservation");
             while (resultats.next()) {
-                Reservation reservation = new Reservation(resultats.getInt(1), resultats.getDate(2), resultats.getInt(3), resultats.getInt(4), resultats.getDouble(5), resultats.getString(6));
+                Reservation reservation = new Reservation(resultats.getDate(2), resultats.getInt(3), resultats.getInt(4), resultats.getDouble(5), resultats.getInt(6));
                 listeReservations.add(reservation);
             }
         } catch (SQLException e) {

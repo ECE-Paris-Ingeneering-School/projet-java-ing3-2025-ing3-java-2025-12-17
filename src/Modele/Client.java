@@ -14,7 +14,6 @@ public class Client {
                 this.clientAge = clientAge;
                 this.typeClient = typeClient;
                 this.clientMotDePasse = clientMotDePasse;
-
         }
 
         // getters

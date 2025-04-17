@@ -12,12 +12,20 @@ public class CalculPrixBillet {
     }
     public int calculPrixDuBillet(Client client, Attraction attraction) {
         String type = client.gettypeClient();
-        return switch (type.toLowerCase()) {
-            case "jeune" ->(int) Float.parseFloat(attraction.getAttractionPrixJeune());
-            case "senior" ->(int) Float.parseFloat(attraction.getAttractionPrixSenior());
-            case "complet" ->(int) Float.parseFloat(attraction.getAttractionPrixComplet());
-            case "reduit" ->(int) Float.parseFloat(attraction.getAttractionPrixHab());
-            default -> throw new IllegalArgumentException("Type de client inconnu : " + type);
-        };
+        switch (type) {
+            case "jeune":
+                prix = (int) Double.parseDouble(attraction.getAttractionPrixJeune());
+                break;
+            case "senior":
+                prix = (int) Double.parseDouble(attraction.getAttractionPrixSenior());
+                break;
+            case "complet":
+                prix = (int) Double.parseDouble(attraction.getAttractionPrixComplet());
+                break;
+            case "reduit":
+                prix = (int) Double.parseDouble(attraction.getAttractionPrixHab());
+                break;
+        }
+        return prix;
     }
 }
