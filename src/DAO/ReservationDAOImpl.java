@@ -33,7 +33,7 @@ public class ReservationDAOImpl implements ReservationDAO {
     public void supprimerReservation(int reservationId) {
         try {
             Connection connexion = daoFactory.getConnection();
-            PreparedStatement preparedStatement = connexion.prepareStatement("delete from reservation where reservationId = ?");
+            PreparedStatement preparedStatement = connexion.prepareStatement("delete from reservation where IdReservation = ?");
             preparedStatement.setInt(1, reservationId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -68,7 +68,7 @@ public class ReservationDAOImpl implements ReservationDAO {
             preparedStatement.setInt(1, reservationId);
             ResultSet resultats = preparedStatement.executeQuery();
             if (resultats.next()) {
-                reservation = new Reservation(resultats.getDate(2), resultats.getInt(3), resultats.getInt(4), resultats.getDouble(5), resultats.getInt(6));
+                reservation = new Reservation(resultats.getInt(1),resultats.getDate(2), resultats.getInt(3), resultats.getDouble(4), resultats.getInt(5), resultats.getInt(6));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -85,7 +85,7 @@ public class ReservationDAOImpl implements ReservationDAO {
             Statement statement = connexion.createStatement();
             ResultSet resultats = statement.executeQuery("select * from reservation");
             while (resultats.next()) {
-                Reservation reservation = new Reservation(resultats.getDate(2), resultats.getInt(3), resultats.getInt(4), resultats.getDouble(5), resultats.getInt(6));
+                Reservation reservation = new Reservation(resultats.getInt(1),resultats.getDate(2), resultats.getInt(3), resultats.getDouble(4), resultats.getInt(5), resultats.getInt(6));
                 listeReservations.add(reservation);
             }
         } catch (SQLException e) {

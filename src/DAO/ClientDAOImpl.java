@@ -73,11 +73,13 @@ public class ClientDAOImpl implements ClientDAO {
          */
         try {
             Connection connection = daoFactory.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO clients (NomUtilisateur, MotDePasse, Age, Tarif) VALUES (?, ?, ?, ?)");
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO client (NomUtilisateur, MotDePasse, Age, Tarif) VALUES (?, ?, ?, ?)");
             preparedStatement.setString(1, client.getclientNom());
             preparedStatement.setString(2, client.getclientMotDePasse());
             preparedStatement.setInt(3, client.getclientAge());
             preparedStatement.setString(4, client.gettypeClient());
+
+            preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

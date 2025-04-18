@@ -13,8 +13,7 @@ import java.time.LocalDate;
 
 public class NouveauRDV {
     public NouveauRDV(DaoFactory dao, Client client, LocalDate date, Attraction attraction,int nbBillet,int prix) {
-        Reservation reservation = new Reservation(Date.valueOf(date),nbBillet,client.getClientId(),prix,attraction.getAttractionId());
-
+        Reservation reservation = new Reservation(Date.valueOf(date),nbBillet,prix,client.getClientId(),attraction.getAttractionId());
         ReservationDAO reservationDAO = new ReservationDAOImpl(dao);
         reservationDAO.ajouterReservation(reservation);
     }

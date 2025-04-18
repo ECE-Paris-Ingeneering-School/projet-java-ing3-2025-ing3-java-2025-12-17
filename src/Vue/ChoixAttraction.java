@@ -20,7 +20,8 @@ public class ChoixAttraction extends JPanel {
     private Color fondGeneral = new Color(12, 38, 21); // Vert clair
     private Color fond=new Color(25, 77, 42);
     private Color fondSurvol=new Color(75, 251, 126);
-    private int hoveredIndex = -1;
+    private ArrayList<Float> opacities = new ArrayList<>();
+    private Timer fadeInTimer;
 
     public void drawWrappedText(Graphics g, String text, int x, int y, int maxWidth) {
         Font font = new Font("Arial", Font.PLAIN, 10);
@@ -32,7 +33,7 @@ public class ChoixAttraction extends JPanel {
         int currentWidth = 0;
 
         // Définir un espacement dynamique entre les lignes en fonction de la taille de la fenêtre
-        int lineSpacing = (int) (getHeight() * 0.02);  // Par exemple, 2% de la hauteur de la fenêtre
+        int lineSpacing = 10;  // Par exemple, 2% de la hauteur de la fenêtre
 
         // Parcourir chaque mot et déterminer si on doit le mettre sur une nouvelle ligne
         for (String word : words) {
@@ -66,6 +67,25 @@ public class ChoixAttraction extends JPanel {
             this.attractions = attractions;
             setOpaque(false);
 
+            for (int i = 0; i < touteLesAttractions.size(); i++) {
+                opacities.add(0f);
+            }
+
+            fadeInTimer = new Timer(40, e -> {
+                boolean allOpaque = true;
+                for (int i = 0; i < opacities.size(); i++) {
+                    if (opacities.get(i) < 1f) {
+                        opacities.set(i, Math.min(1f, opacities.get(i) + 0.05f));
+                        allOpaque = false;
+                    }
+                }
+                repaint();
+                if (allOpaque) {
+                    fadeInTimer.stop();
+                }
+            });
+            fadeInTimer.start();
+
             addMouseMotionListener(new MouseMotionAdapter() {
                 @Override
                 public void mouseMoved(MouseEvent e) {
@@ -84,13 +104,9 @@ public class ChoixAttraction extends JPanel {
                     int index = getAttractionAtPoint(e.getPoint());
                     if (index != -1) {
                         Attraction selected = attractions.get(index);
-                        if(client != null) {
                             ParcAttractionView pav = new ParcAttractionView(mainFrame, dao, selected);
                             mainFrame.setPanel(pav, "attraction_" + selected);
-                        }
-                        else if(client == null) {
-                            CompteView compteView=new CompteView(mainFrame,dao);
-                        }
+
                     }
                 }
 
@@ -139,20 +155,26 @@ public class ChoixAttraction extends JPanel {
                 } else {
                     g.setColor(fond); // Couleur normale
                 }
-
-                g.fillRoundRect(rectX, rectY, rectWidth, rectHeight, 30, 30);
+                float alpha = (i < opacities.size()) ? opacities.get(i) : 1f;
+                Graphics2D g2d = (Graphics2D) g.create();
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+                g2d.setColor(new Color(0, 0, 0, 250));
+                g2d.fillRoundRect(rectX + 10, rectY + 10, rectWidth + 5, rectHeight + 5, 30, 30);
+                g2d.setColor(new Color(25, 77, 42));
+                g2d.fillRoundRect(rectX, rectY, rectWidth, rectHeight, 30, 30);
+                g2d.dispose();
                 int lineSpacing = 25;
-                int nameX = 100;
-                int descriptionX = (int) (getWidth() * 0.25);
+                int nameX = 110;
+                int descriptionX = (int) (getWidth() * 0.235);
                 int textX = (int) (getWidth() * 0.66);
                 int fontSizeDetails = (int) (getWidth() * 0.03);
                 g.setColor(Color.WHITE);
                 g.setFont(new Font("Arial", Font.BOLD,fontSizeDetails));
                 g.drawString(attraction.getAttractionNom(), nameX, 90 + i*(rectHeight+50));
-                g.drawImage(attraction.getAttractionImage(), nameX -10, 110 + i * (rectHeight + 50), null);
+                g.drawImage(attraction.getAttractionImage(), nameX +25, 100 + i * (rectHeight + 50), null);
 
-                g.setFont(new Font("Arial", Font.BOLD, (int) (fontSizeDetails*0.60)));
-                drawWrappedText(g, attraction.getAttractionDescription(), descriptionX, 100 + i * (rectHeight + 50), 200);
+                g.setFont(new Font("Arial", Font.BOLD, (int) (fontSizeDetails*0.50)));
+                drawWrappedText(g, attraction.getAttractionDescription(), descriptionX, 130 + i * (rectHeight + 50), 200);
                 g.drawString("Type d'attraction : \n" + attraction.getAttractionType(),(int) (0.95*textX), 75 + i * (rectHeight+50) + lineSpacing);
                 g.drawString("Prix de l'attraction : " + attraction.getAttractionPrixComplet() + " €", textX, 125 + i * (rectHeight+50) + lineSpacing);
                 g.drawString("Tarif réduit : " +  attraction.getAttractionPrixHab() + " €", textX, 150 + i * (rectHeight+50) + lineSpacing);

@@ -12,7 +12,15 @@ public class Reservation {
     private int clientId;
 
     // constructeur
-    public Reservation(Date reservationDate, int reservationNbPersonnes, int clientId, double reservationPrix, int idAttraction) {
+    public Reservation(Date reservationDate, int reservationNbPersonnes, double reservationPrix, int clientId, int idAttraction) {
+        this.reservationDate = reservationDate;
+        this.reservationNbPersonnes = reservationNbPersonnes;
+        this.clientId = clientId;
+        this.reservationPrix = reservationPrix;
+        this.idAttraction = idAttraction;
+    }
+    public Reservation(int id, Date reservationDate, int reservationNbPersonnes, double reservationPrix, int clientId, int idAttraction) {
+        this.reservationId = id;
         this.reservationDate = reservationDate;
         this.reservationNbPersonnes = reservationNbPersonnes;
         this.clientId = clientId;
