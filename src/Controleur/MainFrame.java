@@ -7,6 +7,10 @@ import Vue.ChoixAttraction;
 import Vue.HeaderView;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Image;
+import javax.imageio.ImageIO;
+import java.io.IOException;
+import java.net.URL;
 
 public class MainFrame extends JFrame {
     private JPanel cardPanel;
@@ -19,9 +23,22 @@ public class MainFrame extends JFrame {
         this.clientTampon = client;
         this.clientConnecte = client;
         updateHeader(dao);
-        setTitle("Ton Appli");
+        setTitle("Dino parc");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH); // plein écran
+        try {
+            URL iconURL = getClass().getResource("/asset/logo_appli.png");
+            if (iconURL != null) {
+                Image appIcon = ImageIO.read(iconURL);
+                setIconImage(appIcon);
+            } else {
+                System.err.println("Erreur: Icône de l'application non trouvée. Vérifiez le chemin.");
+            }
+        } catch (IOException e) {
+            System.err.println("Erreur lors du chargement de l'icône de l'application.");
+            e.printStackTrace();
+        }
+
         setLayout(new BorderLayout());
 
         initHeader(dao);
