@@ -6,22 +6,46 @@ import Modele.Client;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.Serial;
+// Imports nécessaires pour l'image
+import javax.swing.ImageIcon;
+import javax.imageio.ImageIO;
+import java.io.IOException;
+import java.net.URL;
+
 
 public class HeaderView extends JPanel{
+
+    private static final int HEADER_HEIGHT = 100; // Hauteur du header
+    private static final int LOGO_TARGET_HEIGHT = 80; // Hauteur souhaitée pour le logo
 
     public HeaderView(MainFrame mainFrame, DaoFactory dao,Client client) {
         setLayout(new BorderLayout());
 
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(new Color(25, 77, 42));
-        headerPanel.setPreferredSize(new Dimension(getWidth(), 100));
+        headerPanel.setPreferredSize(new Dimension(getWidth(), HEADER_HEIGHT));
 
-        JLabel logoLabel = new JLabel("LOGO PARC");
-        logoLabel.setFont(new Font("Arial", Font.CENTER_BASELINE, 24));
-        logoLabel.setForeground(Color.WHITE);
-        logoLabel.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
-        headerPanel.add(logoLabel, BorderLayout.WEST);
+        // --- Section Logo ---
+        JLabel logoComponent; // JLabel pour l'image ou le texte de secours
+        Image logoImage = loadLogoImage(); // Charger l'image
+
+        if (logoImage != null) {
+            // Redimensionner l'image pour qu'elle s'adapte bien à la hauteur du header
+            Image scaledLogo = resizeImage(logoImage, LOGO_TARGET_HEIGHT);
+            ImageIcon logoIcon = new ImageIcon(scaledLogo);
+            logoComponent = new JLabel(logoIcon); // Créer le JLabel avec l'icône
+        } else {
+            // Solution de secours si l'image ne peut pas être chargée
+            logoComponent = new JLabel("LOGO PARC"); // Texte original comme fallback
+            logoComponent.setFont(new Font("Arial", Font.CENTER_BASELINE, 24));
+            logoComponent.setForeground(Color.WHITE);
+        }
+
+        // Ajouter une marge autour du logo (image ou texte)
+        logoComponent.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15)); // (top, left, bottom, right)
+        headerPanel.add(logoComponent, BorderLayout.WEST); // Ajouter le composant logo à gauche
+        // --- Fin Section Logo ---
+
 
         JPanel navPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 25));
         navPanel.setOpaque(false);
@@ -81,12 +105,42 @@ public class HeaderView extends JPanel{
         setVisible(true);
     }
 
+    // Méthode pour charger l'image du logo depuis les ressources
+    private Image loadLogoImage() {
+        try {
+            URL imageUrl = getClass().getResource("/asset/logo_parc2.png");
+            if (imageUrl == null) {
+                System.err.println("Erreur: Logo non trouvé. Vérifiez le chemin: /asset/logo_parc.png");
+                return null; // Retourne null si l'image n'est pas trouvée
+            }
+            return ImageIO.read(imageUrl); // Lit et retourne l'image
+        } catch (IOException e) {
+            System.err.println("Erreur lors du chargement de l'image du logo.");
+            e.printStackTrace();
+            return null; // Retourne null en cas d'erreur de lecture
+        }
+    }
 
+    // Méthode utilitaire pour redimensionner une image en gardant les proportions
+    private Image resizeImage(Image originalImage, int targetHeight) {
+        int originalWidth = originalImage.getWidth(null);
+        int originalHeight = originalImage.getHeight(null);
+        if (originalHeight <= 0) {
+            return originalImage;
+        }
+        double aspectRatio = (double) originalWidth / originalHeight;
+        int targetWidth = (int) (targetHeight * aspectRatio);
+        if (targetWidth < 1) {
+            targetWidth = 1;
+        }
+        // Utilise SCALE_SMOOTH pour une meilleure qualité de redimensionnement
+        return originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
+    }
 
 
     private void handleNavigation(MainFrame mainFrame, DaoFactory dao, String item) {
         Client client = mainFrame.getClientConnecte();
-        mainFrame.setPanel(new AccueilVue(mainFrame, dao), "parc");
+        // mainFrame.setPanel(new AccueilVue(mainFrame, dao), "parc"); // Ligne originale commentée/supprimée
         switch (item) {
             case "Accueil":
                 mainFrame.setPanel(new AccueilVue(mainFrame, dao), "accueil");
