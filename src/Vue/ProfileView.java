@@ -1,7 +1,6 @@
 package Vue;
 
 import Controleur.CalculReglement;
-import Controleur.ConnexionClient;
 import Controleur.MainFrame;
 import DAO.AttractionDAO;
 import DAO.AttractionDAOImpl;
@@ -30,8 +29,6 @@ public class ProfileView extends JPanel {
         private double prixTotal;
         private ArrayList<Float> opacities = new ArrayList<>();
         private Timer fadeInTimer;
-
-
 
         public void drawWrappedText(Graphics g, String text, int x, int y, int maxWidth) {
             Font font = new Font("Arial", Font.PLAIN, 10);
@@ -77,7 +74,6 @@ public class ProfileView extends JPanel {
             for (int i = 0; i < toutLesReservations.size(); i++) {
                 opacities.add(0f);
             }
-
             fadeInTimer = new Timer(40, e -> {
                 boolean allOpaque = true;
                 for (int i = 0; i < opacities.size(); i++) {
@@ -103,6 +99,7 @@ public class ProfileView extends JPanel {
                     reservationsClient.add(r);
                 }
             }
+
             int totalHeight = reservationsClient.size() * (rectHeight + spacing) + 100;
             setPreferredSize(new Dimension(1000, totalHeight));
         }
@@ -120,8 +117,8 @@ public class ProfileView extends JPanel {
             if (!reservationsClient.isEmpty()) {
                 for (int i = 0; i < reservationsClient.size(); i++) {
                     Reservation reservation = reservationsClient.get(i);
-                    int rectWidth = getWidth() - 100;  // Largeur du rectangle proportionnelle à la taille de la fenêtre
-                    int rectHeight = 220; // ou 180, ou toute autre valeur fixe
+                    int rectWidth = getWidth() - 100;  
+                    int rectHeight = 220;
                     int rectX = 50;
                     int rectY = 50 + i * (rectHeight + 50);
 
@@ -132,7 +129,7 @@ public class ProfileView extends JPanel {
                                 aucuneReservationTrouvee = false;
                                 if (i == hoveredIndex) {
                                 } else {
-                                    g.setColor(greenColor); // Couleur normale
+                                    g.setColor(greenColor);
                                 }
                                 JButton annulerBtn = new JButton("Annuler");
                                 annulerBtn.setFocusPainted(false);

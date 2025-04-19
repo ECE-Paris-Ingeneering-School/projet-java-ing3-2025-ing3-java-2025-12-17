@@ -20,8 +20,16 @@ public class HeaderView extends JPanel{
 
     public HeaderView(MainFrame mainFrame, DaoFactory dao,Client client) {
         setLayout(new BorderLayout());
+        Color fond = new Color(25, 77, 42);
+        if (client!=null) {
+            if (client.gettypeClient().equals("admin")) {
+                fond=new Color(251*2/3, 75*2/3, 42);
+            }
+        }
 
         JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(fond);
+        headerPanel.setPreferredSize(new Dimension(getWidth(), 100));
         headerPanel.setBackground(new Color(25, 77, 42));
         headerPanel.setPreferredSize(new Dimension(getWidth(), HEADER_HEIGHT));
 
@@ -83,6 +91,11 @@ public class HeaderView extends JPanel{
                 int y = 25;
 
                 g2.setColor(new Color(75*2/3, 251*2/3, 126*2/3));
+                if (client!=null) {
+                    if (client.gettypeClient().equals("admin")) {
+                        g2.setColor(new Color(230, 75, 100));
+                    }
+                }
                 g2.fillRoundRect(x, y, rectWidth, rectHeight, 40, 40);
 
                 g2.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 30));
@@ -140,7 +153,7 @@ public class HeaderView extends JPanel{
 
     private void handleNavigation(MainFrame mainFrame, DaoFactory dao, String item) {
         Client client = mainFrame.getClientConnecte();
-        // mainFrame.setPanel(new AccueilVue(mainFrame, dao), "parc"); // Ligne originale commentée/supprimée
+        mainFrame.setPanel(new AccueilVue(mainFrame, dao), "parc");
         switch (item) {
             case "Accueil":
                 mainFrame.setPanel(new AccueilVue(mainFrame, dao), "accueil");

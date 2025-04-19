@@ -98,8 +98,13 @@ public class CompteView extends JPanel {
                 if(clientTampon!=null){
                     messageLabel.setText("");
                     mainFrame.setClientConnecte(clientTampon);
-                    mainFrame.updateHeader(dao);
-                    mainFrame.setPanel(new ProfileView(mainFrame,dao), "Profil");
+                    if(clientTampon.gettypeClient().equals("admin")){
+                        mainFrame.updateHeader(dao);
+                        mainFrame.setPanel(new ProfileAdmin(mainFrame,dao), "ProfilAdmin");
+                    }else {
+                        mainFrame.updateHeader(dao);
+                        mainFrame.setPanel(new ProfileView(mainFrame,dao), "Profil");
+                    }
                 }
                 else{
                     messageLabel.setText("Mauvaise connexion, veuillez rééessayer");
