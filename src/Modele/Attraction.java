@@ -25,6 +25,16 @@ public class Attraction {
         this.attractionPrixSenior = attractionPrixSenior;
         this.attractionDescription = attractionDescription;
     }
+    public Attraction(int attractionId, String attractionType, String attractionNom, String attractionPrixComplet, String attractionPrixHab, String attractionPrixJeune, String attractionPrixSenior, String attractionDescription) {
+        this.attractionId = attractionId;
+        this.attractionType=attractionType;
+        this.attractionNom = attractionNom;
+        this.attractionPrixComplet = attractionPrixComplet;
+        this.attractionPrixHab = attractionPrixHab;
+        this.attractionPrixJeune = attractionPrixJeune;
+        this.attractionPrixSenior = attractionPrixSenior;
+        this.attractionDescription = attractionDescription;
+    }
 
     // getters
     //public int getAttractionId() {

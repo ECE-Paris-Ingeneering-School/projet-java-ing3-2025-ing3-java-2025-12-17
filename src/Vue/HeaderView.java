@@ -32,6 +32,11 @@ public class HeaderView extends JPanel{
         headerPanel.setPreferredSize(new Dimension(getWidth(), 100));
         headerPanel.setBackground(new Color(25, 77, 42));
         headerPanel.setPreferredSize(new Dimension(getWidth(), HEADER_HEIGHT));
+        if (client!=null) {
+            if (client.gettypeClient().equals("admin")) {
+                headerPanel.setBackground(new Color(251*2/3, 75*2/3, 42));
+            }
+        }
 
         // --- Section Logo ---
         JLabel logoComponent; // JLabel pour l'image ou le texte de secours
@@ -93,7 +98,7 @@ public class HeaderView extends JPanel{
                 g2.setColor(new Color(75*2/3, 251*2/3, 126*2/3));
                 if (client!=null) {
                     if (client.gettypeClient().equals("admin")) {
-                        g2.setColor(new Color(230, 75, 100));
+                        g2.setColor(new Color(230, 50, 70));
                     }
                 }
                 g2.fillRoundRect(x, y, rectWidth, rectHeight, 40, 40);
@@ -155,20 +160,19 @@ public class HeaderView extends JPanel{
         Client client = mainFrame.getClientConnecte();
         mainFrame.setPanel(new AccueilVue(mainFrame, dao), "parc");
         switch (item) {
-            case "Accueil":
-                mainFrame.setPanel(new AccueilVue(mainFrame, dao), "accueil");
-                break;
-            case "Tout Parcourir":
-                mainFrame.setPanel(new ChoixAttraction(mainFrame, dao), "choix");
-                break;
-            case "Mon Compte":
-                if (client==null) {
-                    mainFrame.setPanel(new CompteView(mainFrame, dao), "compte");
-                }
-                else{
-                    mainFrame.setPanel(new ProfileView(mainFrame,dao), "Profil");
-                }
-                break;
+                case "Accueil":
+                    mainFrame.setPanel(new AccueilVue(mainFrame, dao), "accueil");
+                    break;
+                case "Tout Parcourir":
+                    mainFrame.setPanel(new ChoixAttraction(mainFrame, dao), "choix");
+                    break;
+                case "Mon Compte":
+                    if (client == null) {
+                        mainFrame.setPanel(new CompteView(mainFrame, dao), "compte");
+                    } else {
+                        mainFrame.setPanel(new ProfileView(mainFrame, dao), "Profil");
+                    }
+                    break;
         }
     }
 }

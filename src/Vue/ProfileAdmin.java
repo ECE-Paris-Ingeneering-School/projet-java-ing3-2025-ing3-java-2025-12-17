@@ -15,19 +15,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ProfileView extends JPanel {
+public class ProfileAdmin extends JPanel {
 
-    class ProfilePanel extends JPanel {
+    class ProfileAdminPanel extends JPanel {
         private ArrayList<Reservation> toutLesReservations;
         private ArrayList<Reservation> reservationsClient;
         private ArrayList<Attraction> toutLesAttractions;
         private int hoveredIndex = -1;
-        private Color fondCase=new Color(25, 77, 42);
-        private Color fondSurvol=new Color(75, 251, 126);
+        private Color fondCase=new Color(251*2/3, 75*2/3, 42);
+        private Color fondSurvol=new Color(230, 50, 70);
         private DaoFactory daoFactory;
         private MainFrame mF;
-        private Client monsieur;
-        private double prixTotal;
         private ArrayList<Float> opacities = new ArrayList<>();
         private Timer fadeInTimer;
 
@@ -65,13 +63,12 @@ public class ProfileView extends JPanel {
             }
         }
 
-        public ProfilePanel(MainFrame mainFrame, DaoFactory dao, ArrayList<Reservation> toutLesReservations, ArrayList<Attraction> toutLesAttractions,MainFrame mF) {
+        public ProfileAdminPanel(MainFrame mainFrame, DaoFactory dao, ArrayList<Reservation> toutLesReservations, ArrayList<Attraction> toutLesAttractions,MainFrame mF) {
             Client client = mainFrame.getClientConnecte();
             this.toutLesReservations = toutLesReservations;
             this.toutLesAttractions = toutLesAttractions;
             this.daoFactory = dao;
             this.mF =mF;
-            this.monsieur = client;
             for (int i = 0; i < toutLesReservations.size(); i++) {
                 opacities.add(0f);
             }
@@ -89,111 +86,79 @@ public class ProfileView extends JPanel {
                 }
             });
             fadeInTimer.start();
-            CalculReglement calculReglement =new CalculReglement(toutLesReservations,client);
-            this.prixTotal = calculReglement.calculPrixTotal(client);
 
             int rectHeight = 220;
             int spacing = 50;
-            this.reservationsClient = new ArrayList<>();
-            for (Reservation r : toutLesReservations) {
-                if (r.getClientId() == monsieur.getClientId()) {
-                    reservationsClient.add(r);
-                }
-            }
-
-            int totalHeight = reservationsClient.size() * (rectHeight + spacing) + 100;
+            int totalHeight = toutLesReservations.size() * (rectHeight + spacing) + 100;
             setPreferredSize(new Dimension(1000, totalHeight));
         }
 
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            g.setColor(greenColor);
+            g.setColor(new Color(38, 12, 21));
             g.fillRect(0, 0, getWidth(), getHeight());
             g.setFont(new Font("Arial", Font.BOLD, 14));
-            g.setColor(Color.RED);
-            g.drawString("Prix total a regler : \n" + this.prixTotal+" €", getWidth()/2-20,25);
 
-            boolean aucuneReservationTrouvee = true;
-
-            if (!reservationsClient.isEmpty()) {
-                for (int i = 0; i < reservationsClient.size(); i++) {
-                    Reservation reservation = reservationsClient.get(i);
-                    int rectWidth = getWidth() - 100;  
+            if (!toutLesAttractions.isEmpty()) {
+                for (int i = 0; i < toutLesAttractions.size(); i++) {
+                    Attraction attraction = toutLesAttractions.get(i);
+                    int rectWidth = getWidth() - 100;
                     int rectHeight = 220;
                     int rectX = 50;
                     int rectY = 50 + i * (rectHeight + 50);
+                    if (i == hoveredIndex) {
+                        g.setColor(new Color(0, 0, 0, 250)); // Ombre noire semi-transparente
+                        g.fillRoundRect(rectX + 10, rectY + 10, rectWidth+5, rectHeight+5, 30, 30);
+                        g.setColor(fondSurvol);
+                    } else {
+                        g.setColor(fondCase);
+                    }
+                    JButton modiferBtn = new JButton("Modifier l'attraction");
+                    modiferBtn.setFocusPainted(false);
+                    setLayout(null);
+                    modiferBtn.setForeground(Color.WHITE);
+                    modiferBtn.setBackground(fondCase);
+                    float alpha = (i < opacities.size()) ? opacities.get(i) : 1f;
+                    Graphics2D g2d = (Graphics2D) g.create();
+                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+                    g2d.fillRoundRect(rectX, rectY, rectWidth, rectHeight, 30, 30);
+                    g2d.dispose();
 
-                    if (reservation.getClientId() == monsieur.getClientId()) {
-                        for (int j = 0; j < toutLesAttractions.size(); j++) {
-                            Attraction attraction = toutLesAttractions.get(j);
-                            if (reservation.getIdAttraction() == attraction.getAttractionId()) {
-                                aucuneReservationTrouvee = false;
-                                if (i == hoveredIndex) {
-                                    g.setColor(new Color(0, 0, 0, 250)); // Ombre noire semi-transparente
-                                    g.fillRoundRect(rectX + 10, rectY + 10, rectWidth+5, rectHeight+5, 30, 30);
-                                    g.setColor(fondSurvol); // Couleur principale avec survol
-                                } else {
-                                    g.setColor(greenColor);
-                                }
-                                JButton annulerBtn = new JButton("Annuler");
-                                annulerBtn.setFocusPainted(false);
-                                setLayout(null);
-                                annulerBtn.setForeground(Color.WHITE);
-                                annulerBtn.setBackground(new Color(25, 77, 42));
-                                float alpha = (i < opacities.size()) ? opacities.get(i) : 1f;
-                                Graphics2D g2d = (Graphics2D) g.create();
-                                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-                                g2d.fillRoundRect(rectX, rectY, rectWidth, rectHeight, 30, 30);
-                                g2d.dispose();
+                    int lineSpacing = 25;
+                    int nameX = 110;
+                    int descriptionX = (int) (getWidth() * 0.235);
+                    int textX = (int) (getWidth() * 0.66);
+                    int infoX = (int) (0.95 * textX);
+                    int infoY = 75 + i * (rectHeight + 50) + lineSpacing;
+                    int fontSizeDetails = (int) (getWidth() * 0.03);
+                    g.setColor(Color.WHITE);
+                    g.setFont(new Font("Arial", Font.BOLD, fontSizeDetails));
+                    g.drawString(attraction.getAttractionNom(), nameX, 90 + i * (rectHeight + 50));
+                    g.drawImage(attraction.getAttractionImage(), nameX + 25, 100 + i * (rectHeight + 50), null);
 
-                                int lineSpacing = 25;
-                                int nameX = 110;
-                                int descriptionX = (int) (getWidth() * 0.235);
-                                int textX = (int) (getWidth() * 0.66);
-                                int infoX = (int) (0.95 * textX);
-                                int infoY = 75 + i * (rectHeight + 50) + lineSpacing;
-                                int fontSizeDetails = (int) (getWidth() * 0.03);
-                                g.setColor(Color.WHITE);
-                                g.setFont(new Font("Arial", Font.BOLD, fontSizeDetails));
-                                g.drawString(attraction.getAttractionNom(), nameX, 90 + i * (rectHeight + 50));
-                                g.drawImage(attraction.getAttractionImage(), nameX + 25, 100 + i * (rectHeight + 50), null);
-
-                                g.setFont(new Font("Arial", Font.BOLD, (int) (fontSizeDetails * 0.50)));
-                                drawWrappedText(g, attraction.getAttractionDescription(), descriptionX, 130 + i * (rectHeight + 50), 200);
-                                g.drawString("Type d'attraction : \n" + attraction.getAttractionType(), infoX, infoY);
-                                g.drawString("Date choisie : " + reservation.getReservationDate(), infoX, infoY + 50);
-                                g.drawString("Vous avez reservé " + reservation.getReservationNbPersonnes() + " billet(s)", infoX, infoY + 100);
-                                if (annulerBtn.getParent() != this) {
-                                    annulerBtn.setBounds(infoX, infoY + 130, 120, 30);
-                                    this.add(annulerBtn);
-                                    annulerBtn.addActionListener(e -> {
-                                        ReservationDAOImpl anul = new ReservationDAOImpl(daoFactory);
-                                        anul.supprimerReservation(reservation.getReservationId());
-                                        removeAll();
-                                        mF.setPanel(new ProfileView(mF, daoFactory), "Profil");
-                                    });
-                                }
-                            }
-                        }
-                        if (aucuneReservationTrouvee) {
-                            g.setFont(new Font("Arial", Font.BOLD, 20));
-                            g.setColor(Color.WHITE);
-                            String message = "Vous n'avez aucune réservation";
-                            int stringWidth = g.getFontMetrics().stringWidth(message);
-                            g.drawString(message, (getWidth() - stringWidth) / 2, getHeight() / 2);
-                        }
+                    g.setFont(new Font("Arial", Font.BOLD, (int) (fontSizeDetails * 0.50)));
+                    drawWrappedText(g, attraction.getAttractionDescription(), descriptionX, 130 + i * (rectHeight + 50), 200);
+                    g.drawString("Type d'attraction: \n" + attraction.getAttractionType(), infoX, infoY);
+                    g.drawString("nombre de réservation :", infoX, infoY + 50);
+                    if (modiferBtn.getParent() != this) {
+                        modiferBtn.setBounds(infoX, infoY + 75, 500, 80);
+                        this.add(modiferBtn);
+                        modiferBtn.addActionListener(e -> {
+                            removeAll();
+                            mF.setPanel(new ModifierAttractionView(mF, daoFactory,attraction), "ProfilAdmin");
+                        });
                     }
                 }
             }
         }
     }
-    private Color greenColor=new Color(12, 38, 21);
+    private Color fondCase=new Color(251*2/3, 75*2/3, 42);
 
-    public ProfileView(MainFrame mainFrame, DaoFactory dao) {
+    public ProfileAdmin(MainFrame mainFrame, DaoFactory dao) {
         Client client = mainFrame.getClientConnecte();
 
         setLayout(new BorderLayout());
-        setBackground(greenColor);
+        setBackground(new Color(38, 12, 21));
 
         JLabel loadingLabel = new JLabel("Chargement du profil...");
         loadingLabel.setForeground(Color.WHITE);
@@ -201,7 +166,7 @@ public class ProfileView extends JPanel {
         loadingLabel.setFont(new Font("Arial", Font.BOLD, 20));
         JPanel loadingPanel = new JPanel();
         loadingPanel.setLayout(new BoxLayout(loadingPanel, BoxLayout.Y_AXIS));
-        loadingPanel.setBackground(greenColor);
+        loadingPanel.setBackground(new Color(38, 12, 21));
         loadingPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         loadingPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
         loadingLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -228,20 +193,20 @@ public class ProfileView extends JPanel {
                 try {
                     remove(loadingPanel);
                     JPanel comptePanel = new JPanel(new BorderLayout());
-                    comptePanel.setBackground(greenColor);
+                    comptePanel.setBackground(new Color(38, 12, 21));
                     comptePanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
                     comptePanel.setMaximumSize(new Dimension(800, 60));
 
 
                     JLabel lblCompte = new JLabel("Vous etes connecter avec le nom '" + client.getclientNom()+"'");
                     lblCompte.setFont(new Font("Arial", Font.BOLD, 14));
-                    lblCompte.setBackground(greenColor);
+                    lblCompte.setBackground(fondCase);
                     lblCompte.setForeground(Color.WHITE);
                     comptePanel.add(lblCompte, BorderLayout.CENTER);
 
                     JButton validerButton = new JButton("Se déconnecter");
                     validerButton.setForeground(Color.WHITE);
-                    validerButton.setBackground(new Color(25, 77, 42));
+                    validerButton.setBackground(new Color(251*2/3, 75*2/3, 42));
                     validerButton.addActionListener(e -> {
                         mainFrame.setClientConnecte(null);
                         mainFrame.initHeader(dao);
@@ -256,15 +221,15 @@ public class ProfileView extends JPanel {
                     comptePanel.add(messageLabel, BorderLayout.WEST);
                     add(comptePanel, BorderLayout.CENTER);
 
-                    ProfilePanel profilePanel = new ProfilePanel(mainFrame, dao, reservations, attractions,mainFrame);
+                    ProfileAdminPanel profilePanel = new ProfileAdminPanel(mainFrame, dao, reservations, attractions,mainFrame);
                     JScrollPane scrollPane = new JScrollPane(profilePanel);
                     scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-                    scrollPane.setBackground(greenColor);
-                    scrollPane.getViewport().setBackground(greenColor);
+                    scrollPane.setBackground(new Color(38, 12, 21));
+                    scrollPane.getViewport().setBackground(new Color(38, 12, 21));
 
                     JPanel mainContainer = new JPanel();
                     mainContainer.setLayout(new BoxLayout(mainContainer, BoxLayout.Y_AXIS));
-                    mainContainer.setBackground(greenColor);
+                    mainContainer.setBackground(new Color(38, 12, 21));
 
                     mainContainer.add(comptePanel);
                     mainContainer.add(scrollPane);

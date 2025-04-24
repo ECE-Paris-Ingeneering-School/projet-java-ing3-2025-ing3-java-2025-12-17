@@ -115,9 +115,15 @@ public class AttractionDAOImpl implements AttractionDAO {
     public void modifierAttraction(Attraction attraction) {
         try {
             Connection connexion = daoFactory.getConnection();
-            PreparedStatement preparedStatement = connexion.prepareStatement("update attraction set NomAttraction = ?, PrixEnfant = ?, PrixAdulte = ?, PrixSenior = ? where IdAttraction = ?");
-            preparedStatement.setString(1, attraction.getAttractionNom());
-            //preparedStatement.setInt(5, attraction.getAttractionId());
+            PreparedStatement preparedStatement = connexion.prepareStatement("update attraction SET Type = ?, Nom = ?, PrixComplet = ?, PrixHabitué = ?, PrixJeune = ?, PrixSenior = ?, Description = ? where IdAttraction = ?");
+            preparedStatement.setString(1, attraction.getAttractionType());
+            preparedStatement.setString(2, attraction.getAttractionNom());
+            preparedStatement.setString(3, attraction.getAttractionPrixComplet());
+            preparedStatement.setString(4, attraction.getAttractionPrixHab());
+            preparedStatement.setString(5, attraction.getAttractionPrixJeune());
+            preparedStatement.setString(6, attraction.getAttractionPrixSenior());
+            preparedStatement.setString(7, attraction.getAttractionDescription());
+            preparedStatement.setInt(8,attraction.getAttractionId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

@@ -158,11 +158,9 @@ public class ChoixAttraction extends JPanel {
                 float alpha = (i < opacities.size()) ? opacities.get(i) : 1f;
                 Graphics2D g2d = (Graphics2D) g.create();
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-                g2d.setColor(new Color(0, 0, 0, 250));
-                g2d.fillRoundRect(rectX + 10, rectY + 10, rectWidth + 5, rectHeight + 5, 30, 30);
-                g2d.setColor(new Color(25, 77, 42));
                 g2d.fillRoundRect(rectX, rectY, rectWidth, rectHeight, 30, 30);
                 g2d.dispose();
+
                 int lineSpacing = 25;
                 int nameX = 110;
                 int descriptionX = (int) (getWidth() * 0.235);
@@ -216,7 +214,6 @@ public class ChoixAttraction extends JPanel {
                     scrollPane.setBackground(fondGeneral);
                     scrollPane.getViewport().setBackground(fondGeneral);
                     add(scrollPane, BorderLayout.CENTER);
-
                     revalidate();
                     repaint();
                 } catch (Exception ex) {
