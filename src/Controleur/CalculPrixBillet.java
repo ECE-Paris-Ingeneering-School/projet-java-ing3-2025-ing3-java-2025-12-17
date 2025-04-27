@@ -10,8 +10,14 @@ public class CalculPrixBillet {
     public CalculPrixBillet() {
         this.prix=0;
     }
-    public int calculPrixDuBillet(Client client, Attraction attraction) {
-        String type = client.gettypeClient();
+    public int calculPrixDuBillet(Attraction attraction, MainFrame mainFrame) {
+
+
+        Client client = mainFrame.getClientConnecte();
+        String type = "complet";
+        if (client != null) {
+            type = client.gettypeClient();
+        }
         switch (type) {
             case "jeune":
                 prix = (int) Double.parseDouble(attraction.getAttractionPrixJeune());

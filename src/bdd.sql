@@ -76,10 +76,11 @@ CREATE TABLE `client` (
 --
 
 INSERT INTO `client` (`IdClient`, `NomUtilisateur`, `MotDePasse`, `Age`, `Tarif`) VALUES
+    (0, 'invité', '0', 25, 'complet'),
     (1, 'Arthur', '1', 20, 'admin'),
     (2, 'Eliott', '12', 90, 'senior'),
     (3, 'theo', '123', 40, 'reduit'),
-    (4, 'gabriel', '1234', 35, 'complet'),
+    (4, 'gabriel', '1234', 35, 'reduit'),
     (5, 'Paupau', '1808', 21, 'jeune');
 
 -- --------------------------------------------------------

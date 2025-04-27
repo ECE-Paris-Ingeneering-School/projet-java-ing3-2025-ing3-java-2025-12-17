@@ -78,10 +78,7 @@ public class ReservationView extends JPanel {
         topPanel.add(secondLabel);
 
         add(topPanel, BorderLayout.NORTH);
-        if (client==null) {
-            pasConnecter(mainFrame,dao,attractionChoisie,couleurChoisie,dateChoisie);
-        }
-        else estConnecter(mainFrame,client, dao,attractionChoisie,couleurChoisie,dateChoisie);
+        estConnecter(mainFrame,client, dao,attractionChoisie,couleurChoisie,dateChoisie);
 
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -151,6 +148,8 @@ public class ReservationView extends JPanel {
     }
 
     public void estConnecter(MainFrame mainFrame,Client client, DaoFactory dao, Attraction attractionChoisie, Color couleurChoisie, LocalDate dateChoisie){
+
+
         JPanel reservationPanel = new JPanel();
         reservationPanel.setLayout(new BoxLayout(reservationPanel, BoxLayout.Y_AXIS));
         reservationPanel.setBackground(greenColor);
@@ -167,14 +166,20 @@ public class ReservationView extends JPanel {
         spinnerPanel.add(spinner);
 
         CalculPrixBillet calculPrixBillet = new CalculPrixBillet();
+        String type;
+        if (client != null) {
+            type = client.gettypeClient();
+        } else {
+            type = "complet";
+        }
 
-        JLabel calculLabel =new JLabel("Vous avez le tarif "+ client.gettypeClient()+", prix totale : 0€");
+        JLabel calculLabel =new JLabel("Vous avez le tarif "+ type +", prix totale : 0€");
         calculLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         calculLabel.setForeground(Color.WHITE);
         calculLabel.setFont(new Font("Arial", Font.PLAIN, 20));
         spinner.addChangeListener(e -> {
-             int total = ((int) spinner.getValue() * calculPrixBillet.calculPrixDuBillet(client, attractionChoisie));
-            calculLabel.setText("Vous avez le tarif " + client.gettypeClient() + ", prix total : " + total + "€");
+             int total = ((int) spinner.getValue() * calculPrixBillet.calculPrixDuBillet(attractionChoisie, mainFrame));
+            calculLabel.setText("Vous avez le tarif " + type + ", prix total : " + total + "€");
         });
 
 
@@ -189,10 +194,14 @@ public class ReservationView extends JPanel {
         bouton.setPreferredSize(new Dimension(300, 100));
 
         bouton.addActionListener(e -> {
-            int total = ((int) spinner.getValue() * calculPrixBillet.calculPrixDuBillet(client, attractionChoisie));
-            new NouveauRDV(dao,client,dateChoisie,attractionChoisie,(int) spinner.getValue(),calculPrixBillet.calculPrixDuBillet(client, attractionChoisie));
-            ProfileView profileView = new ProfileView(mainFrame, dao);
-            mainFrame.setPanel(profileView, "Profil");
+            int total = ((int) spinner.getValue() * calculPrixBillet.calculPrixDuBillet(attractionChoisie, mainFrame));
+            new NouveauRDV(dao,dateChoisie,attractionChoisie,(int) spinner.getValue(),calculPrixBillet.calculPrixDuBillet(attractionChoisie, mainFrame), mainFrame);
+            if (client == null) {
+                mainFrame.setPanel(new CompteView(mainFrame, dao), "compte");
+            }
+            else {
+                mainFrame.setPanel(new ProfileView(mainFrame, dao), "profil");
+            }
         });
 
         JPanel boutonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));

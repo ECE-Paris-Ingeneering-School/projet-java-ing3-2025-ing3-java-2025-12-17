@@ -169,7 +169,10 @@ public class HeaderView extends JPanel{
                 case "Mon Compte":
                     if (client == null) {
                         mainFrame.setPanel(new CompteView(mainFrame, dao), "compte");
-                    } else {
+                    } else  if (client.gettypeClient().equals("admin")){
+                        mainFrame.setPanel(new ProfileAdmin(mainFrame, dao), "Profil");
+                    }
+                    else {
                         mainFrame.setPanel(new ProfileView(mainFrame, dao), "Profil");
                     }
                     break;
