@@ -139,7 +139,14 @@ public class ProfileAdmin extends JPanel {
                     g.setFont(new Font("Arial", Font.BOLD, (int) (fontSizeDetails * 0.50)));
                     drawWrappedText(g, attraction.getAttractionDescription(), descriptionX, 130 + i * (rectHeight + 50), 200);
                     g.drawString("Type d'attraction: \n" + attraction.getAttractionType(), infoX, infoY);
-                    g.drawString("nombre de réservation :", infoX, infoY + 50);
+                    short nbReservations = 0;
+                    for (Reservation reservation : toutLesReservations) {
+                        if (reservation.getIdAttraction() == attraction.getAttractionId()) {
+                            nbReservations++;
+                        }
+
+                    }
+                    g.drawString("nombre de réservation :" + nbReservations, infoX, infoY + 50);
                     if (modiferBtn.getParent() != this) {
                         modiferBtn.setBounds(infoX, infoY + 75, 500, 80);
                         this.add(modiferBtn);
