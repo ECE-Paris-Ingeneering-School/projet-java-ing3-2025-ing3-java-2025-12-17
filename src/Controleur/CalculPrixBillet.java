@@ -12,7 +12,6 @@ public class CalculPrixBillet {
     }
     public int calculPrixDuBillet(Attraction attraction, MainFrame mainFrame) {
 
-
         Client client = mainFrame.getClientConnecte();
         String type = "complet";
         if (client != null) {
