@@ -21,6 +21,14 @@ SET time_zone = "+00:00";
 -- Database: `projet_java`
 --
 
+CREATE DATABASE IF NOT EXISTS `projet_java` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+USE `projet_java`;
+
+DROP TABLE IF EXISTS `attraction`;
+DROP TABLE IF EXISTS `reservation`;
+DROP TABLE IF EXISTS `client`;
+
+
 -- --------------------------------------------------------
 
 --
@@ -68,7 +76,7 @@ CREATE TABLE `client` (
 --
 
 INSERT INTO `client` (`IdClient`, `NomUtilisateur`, `MotDePasse`, `Age`, `Tarif`) VALUES
-    (1, 'Arthur', '1', 20, 'jeune'),
+    (1, 'Arthur', '1', 20, 'admin'),
     (2, 'Eliott', '12', 90, 'senior'),
     (3, 'theo', '123', 40, 'reduit'),
     (4, 'gabriel', '1234', 35, 'complet'),
